@@ -19,13 +19,9 @@ def add_card_to_inventory(
     """
     return add_card_to_inventory_service(db=db, user_id=current_user_id, data=payload)
 
-@router.get("/", response_model=List[UserInventoryResponse])
+@router.get("/{user_id}", response_model=List[UserInventoryResponse])
 def get_user_inventory(
-    current_user_id: int = 1,
+    user_id: int,
     db: Session = Depends(get_db)
 ):
-    """
-    Lista todas las cartas que posee el usuario en su inventario.
-    """
-    
-    return get_user_inventory_service(db=db, user_id=current_user_id)
+    return get_user_inventory_service(db=db, user_id=user_id)

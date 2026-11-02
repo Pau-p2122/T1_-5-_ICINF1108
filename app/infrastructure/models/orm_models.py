@@ -48,6 +48,19 @@ class TradeOfferModel(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    receiver_id = Column(Integer, ForeignKey("users.id"), nullable=False) 
-    status = Column(String, default="PENDING") 
+    receiver_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    status = Column(String, default="PENDING")
     created_at = Column(String, nullable=False)
+
+    items = relationship("TradeOfferItemModel", back_populates="trade_offer")
+
+
+class TradeOfferItemModel(Base):
+    __tablename__ = "trade_offer_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    trade_offer_id = Column(Integer, ForeignKey("trade_offers.id"), nullable=False)
+    inventory_item_id = Column(Integer, ForeignKey("user_card_inventory.id"), nullable=False)
+    is_offered_by_sender = Column(Boolean, nullable=False) # True si es del sender, False si es del receiver
+
+    trade_offer = relationship("TradeOfferModel", back_populates="items")
