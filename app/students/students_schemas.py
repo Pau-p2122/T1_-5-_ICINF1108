@@ -29,4 +29,4 @@ class UpdateStudentDto(BaseModel):
         default=None, min_length=3, max_length=100, pattern=NO_HTML_PATTERN
     )
     email: EmailStr | None = None
-    age: int | None = Field(default=None, ge=18, le=99)
+    age: int | None = Field(default=None, ge=18, le=99) 
