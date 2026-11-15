@@ -2,7 +2,15 @@ from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc
 from app.infrastructure.models.orm_models import CardModel
 from typing import Optional, Dict, Any
+from app.infrastructure.repositories.card_repository import CardRepository
 
+class CardService:
+    def __init__(self, db: Session):
+        self.repository = CardRepository(db)
+
+    def get_filtered_cards(self, skip: int, limit: int, search: str | None, order_by: str):
+        return self.repository.get_all(skip=skip, limit=limit, search=search, order_by=order_by)
+        
 def create_card_service(db: Session, data):
     new_card = CardModel(
         name=data.name,
@@ -51,6 +59,8 @@ def get_cards_service(
     return {
         "total": total,
         "limit": limit,
+
+        
         "offset": skip,
         "items": items
     }
