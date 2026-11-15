@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.infrastructure.models.orm_models import CardModel
+from app.infrastructure.models.orm_models import CardModel, UserCardInventoryModel
 
 class CardRepository:
     def __init__(self, db: Session):

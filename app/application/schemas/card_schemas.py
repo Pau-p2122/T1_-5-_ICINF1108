@@ -32,3 +32,12 @@ class CardListResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class CardUpdate(BaseModel):
+    name: Optional[str] = Field(None, description="Nombre de la carta")
+    expansion: Optional[str] = Field(None, description="Expansión a la que pertenece la carta")
+    rarity: Optional[str] = Field(None, description="Rareza de la carta")
+    card_number: Optional[str] = Field(None, description="Número de la carta en la expansión")
+
+    class Config:
+        from_attributes = True
