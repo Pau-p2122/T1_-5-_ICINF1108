@@ -1,7 +1,6 @@
 from sqlalchemy import asc, desc
 from sqlalchemy.orm import Session
-
-from app.infrastructure.models.orm_models import CardModel
+from app.infrastructure.models.orm_models import CardModel, UserCardInventoryModel
 
 SORT_FIELDS = ["id", "name", "expansion", "rarity", "card_number"]
 

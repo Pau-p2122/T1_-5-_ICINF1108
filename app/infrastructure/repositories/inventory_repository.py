@@ -1,33 +1,25 @@
 from sqlalchemy.orm import Session
-
-from app.infrastructure.models.orm_models import CardModel, UserCardInventoryModel
-
+from app.infrastructure.models.orm_models import UserCardInventoryModel, CardModel
+from app.application.schemas.inventory_schemas import UserInventoryAdd
 
 class InventoryRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def card_exists(self, card_id: int) -> bool:
-        return (
-            self.db.query(CardModel).filter(CardModel.id == card_id).first()
-            is not None
-        )
+    def check_card_exists(self, card_id: int):
+        return self.db.query(CardModel).filter(CardModel.id == card_id).first()
 
-    def add(self, user_id: int, card_id: int, condition: str, is_for_trade: bool):
-        item = UserCardInventoryModel(
+    def add_to_inventory(self, user_id: int, data: UserInventoryAdd):
+        inventory_item = UserCardInventoryModel(
             user_id=user_id,
-            card_id=card_id,
-            condition=condition,
-            is_for_trade=is_for_trade,
+            card_id=data.card_id,
+            condition=data.condition,
+            is_for_trade=data.is_for_trade
         )
-        self.db.add(item)
+        self.db.add(inventory_item)
         self.db.commit()
-        self.db.refresh(item)
-        return item
+        self.db.refresh(inventory_item)
+        return inventory_item
 
-    def get_by_user(self, user_id: int):
-        return (
-            self.db.query(UserCardInventoryModel)
-            .filter(UserCardInventoryModel.user_id == user_id)
-            .all()
-        )
+    def get_by_user_id(self, user_id: int):
+        return self.db.query(UserCardInventoryModel).filter(UserCardInventoryModel.user_id == user_id).all()
