@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
-from app.infrastructure.repositories.inventory_repository import InventoryRepository
 from app.domain.exceptions.business_exceptions import BusinessException
+from app.infrastructure.repositories.inventory_repository import InventoryRepository
+
 
 def add_card_to_inventory_service(db: Session, user_id: int, data):
     """
