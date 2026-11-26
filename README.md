@@ -76,3 +76,10 @@ La aplicación queda disponible en:
 - `make format` — formatea el código con Ruff
 - `make format-check` — verifica el formato
 - `make clean` — elimina `.venv`, cachés y artefactos
+
+## Pruebas automatizadas y cobertura
+
+Para ejecutar la suite completa de pruebas (unitarias, integración, E2E y regresión) con reporte de cobertura:
+
+```bash
+uv run python -m pytest --cov=app --cov-report=term-missing -W ignore

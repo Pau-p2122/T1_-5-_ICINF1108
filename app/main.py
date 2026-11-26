@@ -1,13 +1,14 @@
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
+from app.domain.exceptions.business_exceptions import BusinessException
 from app.presentation.routers.auth_router import router as auth_router
 from app.presentation.routers.card_router import router as card_router
 from app.presentation.routers.inventory_router import router as inventory_router
 from app.presentation.routers.trade_router import router as trade_router
-from app.domain.exceptions.business_exceptions import BusinessException
+
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -27,14 +28,14 @@ def create_app() -> FastAPI:
     @app.exception_handler(BusinessException)
     async def business_exception_handler(request: Request, exc: BusinessException):
         return JSONResponse(
-            status_code=exc.status_code if hasattr(exc, "status_code") else status.HTTP_400_BAD_REQUEST,
+            status_code=getattr(exc, "status_code", status.HTTP_400_BAD_REQUEST),
             content={
                 "error": {
                     "code": getattr(exc, "code", "BUSINESS_RULE_VIOLATION"),
                     "message": exc.message,
-                    "details": []
+                    "details": [],
                 }
-            }
+            },
         )
 
     @app.exception_handler(RequestValidationError)
@@ -45,16 +46,17 @@ def create_app() -> FastAPI:
                 "error": {
                     "code": "VALIDATION_ERROR",
                     "message": "Los datos enviados no cumplen con el esquema o validaciones requeridas",
-                    "details": exc.errors()
+                    "details": exc.errors(),
                 }
-            }
+            },
         )
-    
+
     app.include_router(auth_router, prefix="/api/v1/auth", tags=["Auth & Users"])
     app.include_router(card_router, prefix="/api/v1/cards", tags=["Cards Catalog"])
     app.include_router(inventory_router, prefix="/api/v1/inventory", tags=["User Inventory"])
     app.include_router(trade_router, prefix="/api/v1/trades", tags=["Trades & Market"])
 
     return app
+
 
 app = create_app()
